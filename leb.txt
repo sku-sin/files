@@ -1,0 +1,827 @@
+1) To implement Depth First Search Algorithm
+
+https://www.hackerearth.com/practice/algorithms/graphs/depth-first-search/practice-problems/algorithm/minimum-nodes-e023e51e/
+
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+int val[100005],n,q,r,k;
+vector<int>v[100005];
+bool vis[100005];
+int fin=100005;
+void init()
+{
+	fin=100005;
+	for(int i=1;i<=100000;i++)vis[i]=0;
+}
+void dfs(int r,int value,int cnt)
+{
+	if(value-val[r]<=0){fin=min(fin,cnt+1);return;}
+	vis[r]=1;cnt++;bool f=0;
+	for(auto i:v[r])
+	{
+		if(vis[i])continue;
+		dfs(i,value-val[r],cnt);
+	}
+}
+int main()
+{	
+	cin>>n>>q;
+	for(int i=1;i<=n;i++)cin>>val[i];
+	for(int i=1;i<n;i++)
+	{
+		int x,y;
+		cin>>x>>y;
+		v[y].push_back(x);
+		v[x].push_back(y);	
+	}
+	while(q--)
+	{
+		init();
+		cin>>r>>k;
+		dfs(r,k,0);
+		cout<<fin<<"\n";
+	}
+	return 0;
+}
+
+https://www.hackerearth.com/practice/algorithms/graphs/depth-first-search/practice-problems/algorithm/minimize-the-magic-05a3986c/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define ll long long
+
+const int no = 1e5 + 2;
+vector<ll> adj[no];
+bool visited[no];
+ll dis[no];
+ll a[no];
+ll b[no];
+int g;
+ll t = 1e7;
+
+void dfs(ll s, ll g) {
+    visited[s] = true;
+    dis[s] = g;
+    b[s] = a[s];
+    for (int i = 0; i < adj[s].size(); ++i) {
+        if (visited[adj[s][i]] == false) {
+            dfs(adj[s][i], g + 1);
+            b[s] += b[adj[s][i]];
+        }
+    }
+}
+
+void initialize() {
+    for (int i = 0; i < no; ++i)
+        visited[i] = false;
+}
+
+int main() {
+    ll n, edges, x, y;
+    cin >> n;
+    ll p;
+    cin >> p;
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
+    }
+    for (int i = 1; i < n; ++i) {
+        cin >> x >> y;
+        // Undirected Graph
+        adj[x].push_back(y); // Edge from vertex x to vertex y
+        adj[y].push_back(x); // Edge from vertex y to vertex x
+    }
+    initialize();
+    g = a[1]; // Initialize all nodes as not visited
+    dfs(1, 0);
+    ll count = 0;
+    for (int i = 1; i <= n; i++) {
+        count += b[i];
+    }
+    for (int i = 1; i <= n; i++) {
+        if (i != 1 && adj[i].size() <= 2) {
+            t = min(t, (dis[i] + 1));
+        }
+        if (i == 1 && adj[i].size() <= 1) {
+            t = min(t, (dis[i] + 1));
+        }
+    }
+    count += t * p;
+    count += p;
+    cout << count;
+    return 0;
+}
+
+
+2) To implement Breadth First Search Algorithm
+
+https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/cloudy-days-82a872ec/
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <set>
+#include <string>
+#include <sstream>
+
+class City {
+public:
+    int Id;
+    std::vector<City*> ConnectedCities;
+};
+
+void VisitCity(City* city, int remainingFuel, std::set<City*>& visitedCities) {
+    if (remainingFuel < 0) return;
+
+    std::queue<std::pair<City*, int>> queue;
+    queue.push({city, remainingFuel});
+
+    while (!queue.empty()) {
+        auto current = queue.front();
+        queue.pop();
+        City* currentCity = current.first;
+        int currentFuel = current.second;
+
+        if (currentFuel < 0 || visitedCities.find(currentCity) != visitedCities.end()) continue;
+
+        visitedCities.insert(currentCity);
+
+        for (City* connectedCity : currentCity->ConnectedCities) {
+            queue.push({connectedCity, currentFuel - 1});
+        }
+    }
+}
+
+int main() {
+    // Read input
+    std::string line;
+    std::getline(std::cin, line);
+    std::istringstream input(line);
+    int N, M, K, C;
+    input >> N >> M >> K >> C;
+
+    // Initialize cities
+    std::vector<City> cities(N);
+    for (int i = 0; i < N; ++i) {
+        cities[i].Id = i + 1;
+    }
+
+    // Initialize roads
+    for (int i = 0; i < M; ++i) {
+        std::getline(std::cin, line);
+        std::istringstream road(line);
+        int u, v;
+        road >> u >> v;
+
+        cities[u - 1].ConnectedCities.push_back(&cities[v - 1]);
+        cities[v - 1].ConnectedCities.push_back(&cities[u - 1]);
+    }
+
+    std::set<City*> visitedCities;
+
+    VisitCity(&cities[C - 1], K, visitedCities);
+
+    std::cout << visitedCities.size() << std::endl;
+
+    return 0;
+}
+
+
+https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/dhoom-4/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long int
+#define vi vector<int>
+#define vvi vector<vi>
+#define pb push_back
+#define fo(i, a, b) for(int i = a; i < b; i++)
+#define foe(i, a, b) for(int i = a; i <= b; i++)
+#define endl '\n'
+#define ff first
+#define ss second
+#define MOD 1000000007
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int t;
+    // cin >> t;
+    t = 1;
+    while(t--) {
+        ll src, des;
+        cin >> src >> des;
+        ll n;
+        cin >> n;
+        vector<ll> v;
+        for(ll i = 0; i < n; i++) {
+            ll x;
+            cin >> x;
+            v.push_back(x);
+        }
+
+        queue<ll> q;
+        q.push(src);
+        vector<int> vis(100001, -1);
+        vis[src] = 0;
+        while(!q.empty()) {
+            ll curr = q.front();
+            q.pop();
+            if(curr == des)
+                break;
+            for(ll i = 0; i < v.size(); i++) {
+                ll ans = (curr * v[i]) % 100000;
+                if(vis[ans] == -1) {
+                    vis[ans] = vis[curr] + 1;
+                    q.push(ans);
+                }
+            }
+        }
+        cout << vis[des] << endl;
+    }
+    return 0;
+}
+
+
+3) To implement A* Search Algorithm.
+
+https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/description/
+#include <vector>
+#include <queue>
+#include <tuple>
+
+using namespace std;
+
+class Solution {
+public:
+    int shortestPath(vector<vector<int>>& grid, int k) {
+        int m = grid.size(), n = grid[0].size();
+        vector<vector<int>> visited(m, vector<int>(n, -1));
+        priority_queue<tuple<int,int,int,int>, vector<tuple<int,int,int,int>>, greater<tuple<int,int,int,int>>> pq;
+        pq.push({0, 0, 0, k});
+        vector<vector<int>> dirs = {{0,1},{1,0},{0,-1},{-1,0}};
+        
+        while (!pq.empty()) {
+            auto [steps, x, y, rest] = pq.top(); pq.pop();
+            if (x == m - 1 && y == n - 1) return steps;
+            if (visited[x][y] != -1 && visited[x][y] <= rest) continue;
+            visited[x][y] = rest;
+            
+            for (auto& dir : dirs) {
+                int nx = x + dir[0], ny = y + dir[1];
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                    if (grid[nx][ny] == 1 && rest > 0)
+                        pq.push({steps + 1, nx, ny, rest - 1});
+                    else if (grid[nx][ny] == 0)
+                        pq.push({steps + 1, nx, ny, rest});
+                }
+            }
+        }
+        return -1;
+    }
+};
+
+
+
+4) To implement Best First Search Algorithm
+
+https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
+class Solution {
+public:
+    unordered_map<int,vector<pair<int,int>>> network;
+    int price = 0;
+    int res = 10000000;
+    unordered_map<int,vector<pair<int,int>>> stop_price;
+    inline bool continueroute(int city, int stop, int price){
+        if (stop_price.find(city) == stop_price.end()){
+            //the first route for the city found, add it to hash map and return true
+            pair<int,int> p = {stop, price};
+            vector<pair<int,int>> v;
+            v.emplace_back(p);
+            stop_price.emplace(city,v);
+            return true;
+        } else{
+            auto it = find_if(stop_price[city].begin(), stop_price[city].end(), 
+            [&stop](const pair<int,int>& p){ return p.first == stop; });
+            if (it == stop_price[city].end()){
+                //if there exist a route that has smaller stops and lower / same price with this route, return false 
+                for (int i=0; i< stop_price[city].size();i++){
+                    if (stop_price[city][i].first < stop && stop_price[city][i].second <= price ){
+                        return false;
+                    }
+                }
+                pair<int,int> p = {stop, price};
+                stop_price[city].emplace_back(p);
+                return true;
+            } else{//route with same stops already exist, if the price is lower than existing route, update the price and return true
+                if (price < it-> second){
+                    it->second = price;  
+                    return true;
+                } else{ //price higher, return false and not continue with this route
+                    return false;
+                }
+            }
+        }
+
+    }
+    void dfs(int city, int dest, int k,int stop){                 
+        //cout << "depart " << city << endl;
+        if (city == dest){
+            //cout << "reached " << price << endl;
+            res = min(res,price);
+            return;
+        }
+        for (int i=0; i< network[city].size();i++){
+            int next = network[city][i].first;
+            //cout << "next " << next << endl;
+            if (stop<=k && price < res-network[city][i].second){//visit next city
+                price += network[city][i].second;
+                //
+                if ( continueroute(next, stop+1, price) ){
+                    dfs(next, dest,k,stop+1);
+                }               
+                price -= network[city][i].second;
+            }
+        }
+        //cout << city << "," << price << endl;
+    }
+
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        for (int i=0; i< flights.size();i++){
+            if (network.find(flights[i][0]) == network.end()){
+                vector<pair<int,int>> v;
+                pair<int,int> p= {flights[i][1],flights[i][2]}; //destination & price
+                v.emplace_back(p);
+                network.emplace(flights[i][0],v);
+            } else{
+                pair<int,int> p= {flights[i][1],flights[i][2]}; //destination & price
+                network[flights[i][0]].emplace_back(p);
+            }
+
+        }
+
+        dfs(src, dst,k,0);
+        if (res == 10000000){
+            return -1;
+        }
+        return res;
+    }
+};
+
+
+https://leetcode.com/problems/possible-bipartition/description/
+class Solution {
+public:
+    vector<int> color;
+    vector<vector<int>> g;
+    bool is_bipartite = true;
+
+    inline void dfs(int v, int cur_color = 1) {
+        color[v] = cur_color;
+        for (const auto& to: g[v]) {
+            if (!color[to]) {
+                dfs(to, 3 - cur_color);
+            } else {
+                if (color[to] == cur_color) {
+                    is_bipartite = false;
+                }
+            }
+        }
+    }
+
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        color.resize(n);
+        g.resize(n, vector<int>());
+
+        for (const auto& dislike: dislikes) {
+            int from = dislike[0] - 1,
+                to = dislike[1] - 1;
+            g[from].push_back(to);
+            g[to].push_back(from);
+        }
+
+        for (int i = 0; i < n; ++i) {
+            if (!color[i]) {
+                dfs(i);
+            }
+        }
+
+        return is_bipartite;
+    }
+};
+
+
+5) To implement Min-Max
+
+https://www.hackerearth.com/practice/basic-programming/implementation/basics-of-implementation/practice-problems/algorithm/min-max-3/
+
+#include <iostream>
+
+#include <set>
+
+#include <iterator>
+
+using namespace std;
+
+int main()
+{
+
+    int n, i, j = 0, k;
+
+    cin >> n;
+
+    set<int> a;
+
+    while (n--)
+    {
+
+        cin >> k;
+
+        a.insert(k);
+    }
+
+    auto it = a.begin();
+
+    i = *it;
+
+    it++;
+
+    for (; it != a.end(); it++)
+    {
+
+        if (*it != i + 1)
+        {
+            cout << "NO\n";
+            j = 1;
+            break;
+        }
+
+        else
+        {
+            i = *it;
+        }
+    }
+
+    if (j != 1)
+    {
+        cout << "YES\n";
+    }
+}
+
+
+https://www.hackerearth.com/problem/algorithm/sherlock-and-minimax/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+// Function to find the integer M
+int findM(int arr[], int n, int p, int q) {
+    int maxMinDiff = -1; // Initialize maximum of minimum differences to the lowest possible value
+    int result = p; // Initialize result to P
+
+    // Loop through all integers from P to Q
+    for (int m = p; m <= q; m++) {
+        int minDiff = INT_MAX; // Initialize minimum difference to maximum possible value
+
+        // Find the minimum difference between each element of array and M
+        for (int i = 0; i < n; i++) {
+            int diff = abs(arr[i] - m);
+            if (diff < minDiff) {
+                minDiff = diff;
+            }
+        }
+
+        // If current minimum difference is greater than previous maximum of minimum differences, update result and maxMinDiff
+        if (minDiff > maxMinDiff) {
+            result = m;
+            maxMinDiff = minDiff;
+        } else if (minDiff == maxMinDiff && m < result) {
+            // If there are multiple solutions, choose the smallest M
+            result = m;
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int p, q;
+    scanf("%d %d", &p, &q);
+
+    // Find and print the integer M
+    int m = findM(arr, n, p, q);
+    printf("%d\n", m);
+
+    return 0;
+}
+
+
+
+6) To implement Alpha-Beta Pruning Algorithm
+
+https://leetcode.com/problems/stone-game/description
+
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    int alphaBeta(std::vector<int>& piles, int i, int j, int a, int b, bool aliceTurn) {
+        if (i > j) return 0; // Base case: no piles left
+
+        if (aliceTurn) {
+            int takeFirst = piles[i] + alphaBeta(piles, i + 1, j, a, b, false);
+            a = std::max(a, takeFirst);
+            if (b <= a) return takeFirst; // Alpha cut-off
+            int takeLast = piles[j] + alphaBeta(piles, i, j - 1, a, b, false);
+            return std::max(takeFirst, takeLast);
+        } else {
+            int takeFirst = -piles[i] + alphaBeta(piles, i + 1, j, a, b, true);
+            b = std::min(b, takeFirst);
+            if (b <= a) return takeFirst; // Beta cut-off
+            int takeLast = -piles[j] + alphaBeta(piles, i, j - 1, a, b, true);
+            return std::min(takeFirst, takeLast);
+        }
+    }
+
+    bool stoneGame(std::vector<int>& piles) {
+        int n = piles.size();
+        int aliceScore = alphaBeta(piles, 0, n - 1, INT_MIN, INT_MAX, true);
+        return aliceScore > 0; // Alice wins if her score is positive
+    }
+};
+
+https://leetcode.com/problems/predict-the-winner/description/
+
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        vector<int> dp(nums.size());
+        int n = nums.size();
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i; j < n; j++) {
+                if (i == j) {
+                    dp[j] = nums[i];
+                } else {
+                    dp[j] = max(nums[i] - dp[j], nums[j] - dp[j - 1]);
+                }
+            }
+        }
+        return dp[n - 1] >= 0;
+    }
+};
+
+
+7) To implement Travelling Salesperson Problem
+
+https://www.hackerearth.com/problem/algorithm/a-travelling-salesman-problem/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MOD 1000000007
+
+// Function to count the number of set bits in a number
+int countSetBits(int n) {
+    int count = 0;
+    while (n) {
+        count += n & 1;
+        n >>= 1;
+    }
+    return count;
+}
+
+// Function to find the number of special numbers not greater than n
+int countSpecialNumbers(int n, int k) {
+    int specialCount = 0;
+    for (int i = 1; i <= n; i++) {
+        int x = i;
+        int operations = 0;
+        while (x > 1) {
+            x = countSetBits(x);
+            operations++;
+        }
+        if (operations == k)
+            specialCount = (specialCount + 1) % MOD;
+    }
+    return specialCount;
+}
+
+int main() {
+    int n, k;
+    cout << "Enter a positive integer n: ";
+    cin >> n;
+    cout << "Enter the number of operations k: ";
+    cin >> k;
+    
+    int specialNumbers = countSpecialNumbers(n, k);
+    cout << "Number of special numbers not greater than " << n << ": " << specialNumbers << endl;
+    
+    return 0;
+}
+
+
+https://leetcode.com/problems/find-the-shortest-superstring/description/
+class Solution {
+public:
+    string shortestSuperstring(vector<string>& words) {
+        const size_t N = words.size();
+        vector<vector<int>> overlap = vector<vector<int>>(N, vector<int>(N, 0));
+        // pre-calculate the distance (number of shared characters) between each word pair in each direction 
+        for (int i = 0; i < N-1; i++)
+        {
+            for (int j = i+1; j < N; j++)
+            {
+                overlap[i][j] = Overlap(words[i], words[j]);
+                overlap[j][i] = Overlap(words[j], words[i]);
+            }
+        }
+
+        const size_t R = pow(2, N);
+        DP dp = DP(R, vector<int>(N, 0));
+        DP parent = DP(R, vector<int>(N,0));
+        vector<bool> visited = vector<bool>(R,0);
+        
+        list<int> q{};
+        for (int i = 0; i < N; i++)
+        {
+            const int mask = 1 << i;
+            q.emplace_back(1 << i);
+        }
+
+        while (!q.empty())
+        {
+            int mask = q.front(); q.pop_front();
+            for (int i = 0; i < N; i++)
+            {
+                if ((mask & (1 << i)) == 0) continue;
+                
+                int prev = mask ^ (1<<i);
+                if (prev == 0) continue;
+                for (int j = 0; j < N; j++)
+                {
+                    if ((prev & (1<<j)) == 0) continue;
+                    
+                    int score = dp[prev][j] + overlap[j][i];
+                    if (score >= dp[mask][i])
+                    {
+                        dp[mask][i] = score;
+                        parent[mask][i] = j;
+                    }
+                }
+            }
+
+            for (int i = 0; i < N; i++)
+            {
+                int next = mask | (1 << i);
+                if (!visited[next])
+                {
+                    visited[next] = true;
+                    q.emplace_back(next);
+                }
+            }
+        }
+
+        int curr = 0;
+        int max_score = *max_element(dp[R-1].begin(), dp[R-1].end()); 
+        for (int i = 0; i < N; i++)
+        {
+            if (dp[R-1][i] == max_score) curr = i;
+        }
+
+        list<int> path{curr};
+        int curr_mask = R-1;
+        for(int i = 1; i < N; i++)
+        {
+            int prev = curr;
+            curr = parent[curr_mask][curr];
+            curr_mask = curr_mask & (~(1 << prev));
+            path.emplace_front(curr);
+        }
+
+        auto prev = path.begin();
+        string res = words[*prev];
+        for (auto it = ++path.begin(); it != path.end(); it++)
+        {
+            res += words[*it].substr(overlap[*prev][*it]);
+            prev = it;
+        }
+
+        return res;
+    }
+private:
+    using DP = vector<vector<int>>;
+
+    inline int Overlap(string front, string end)
+    {
+        int max_overlap = min(front.size(),end.size());
+        while (max_overlap > 0)
+        {
+            int j = 0;
+            bool possible = true;
+            for (int i = front.size()-max_overlap; i < front.size() && possible; i++)
+            {
+                if (front[i] != end[j]) possible = false;
+                j++;
+            }
+            if (possible) return max_overlap;
+            max_overlap--;
+        }
+        return 0;
+    }
+};
+
+
+8) To implement LISP Iterative Functions (If construct, Do times loop, for loop, do list)
+;; If construct
+(if (> x y)
+    (format t "X is greater than Y")
+    (format t "X is not greater than Y"))
+
+;; Do times loop
+(dotimes (i 5)
+  (format t "Iteration: ~a~%" i))
+
+;; For loop (using LOOP for iteration)
+(loop for i from 1 to 10 do
+  (format t "Loop iteration: ~a~%" i))
+
+;; Do list
+(dolist (element '(1 2 3 4 5))
+  (format t "Element: ~a~%" element))
+
+
+9) To implement Recursion using LISP
+;; Factorial function using recursion
+(defun factorial (n)
+  (if (= n 0)
+      1
+      (* n (factorial (- n 1)))))
+
+;; Example usage
+(factorial 5) ; Returns 120
+
+
+10) To implement Array using LISP
+
+;; Creating and using a one-dimensional array
+(setq my-array (make-array 10 :initial-element nil))
+(setf (aref my-array 0) 10) ;; Setting the first element to 10
+
+;; Creating and using a two-dimensional array
+(setq my-2d-array (make-array '(3 3) :initial-contents '((0 1 2) (3 4 5) (6 7 8))))
+
+
+
+11) To implement Backward/Forward Reasoning
+
+
+Forward Reasoning in LISP:
+; Define a simple knowledge base
+(defparameter *knowledge-base* '((sun-is-shining)
+                                 (flowers-are-blooming)))
+
+; Define a rule that says if the sun is shining, then it's a good day
+(defun apply-forward-rule ()
+  (when (member 'sun-is-shining *knowledge-base*)
+    (push 'its-a-good-day *knowledge-base*)))
+
+; Apply the rule
+(apply-forward-rule)
+
+; Check the updated knowledge base
+*knowledge-base* ; Output should include 'its-a-good-day
+
+
+Backward Reasoning in LISP:
+; Define a goal
+(defparameter *goal* 'its-a-good-day)
+
+; Define a rule that can prove the goal
+(defun rule-for-good-day ()
+  (and (member 'sun-is-shining *knowledge-base*)
+       (member 'flowers-are-blooming *knowledge-base*)))
+
+; Function to apply backward reasoning
+(defun apply-backward-rule ()
+  (if (rule-for-good-day)
+      (format t "The goal ~a is achieved because the sun is shining and flowers are blooming." *goal*)
+      (format t "The goal ~a is not achieved." *goal*)))
+
+; Apply the rule
+(apply-backward-rule)
+
